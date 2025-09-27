@@ -1,0 +1,23 @@
+﻿using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace ShimmerMod.Content.Tiles
+{
+    public class VoidBlock : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileMergeDirt[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            MinPick = 300;
+
+            DustType = DustID.ShimmerSpark;
+            VanillaFallbackOnModDeletion = TileID.DiamondGemspark;
+
+            AddMapEntry(new Color(8, 11, 15));
+        }
+    }
+}
