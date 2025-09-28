@@ -136,14 +136,23 @@ namespace ShimmerMod.Content.WorldGeneration
             // Step 4: Generate a tunnel in that first layer
             //Point randomPoint = new Point(WorldGen.genRand.Next(mostLeftShimmer, mostRightShimmer), WorldGen.genRand.Next((mostLowShimmer + (biomeSizeY/2) + 10), (mostLowShimmer + biomeSizeY + 10)));
 
-            Point tunnelPoint = new Point(mostLeftShimmer + WorldGen.genRand.Next(-10, -5), (mostLowShimmer + biomeSizeY + 10) + WorldGen.genRand.Next(-10, 10));
+            Point tunnelPoint = new Point(mostLeftShimmer + WorldGen.genRand.Next(-10, -5), (mostLowShimmer + biomeSizeY + 10) + WorldGen.genRand.Next(-10, -5));
             ReLogic.Utilities.Vector2D vectorFound = WorldGen.digTunnel(tunnelPoint.X, tunnelPoint.Y, 1, 0, ((int)(lengthXShimmer * (1.4))), 6);
             Point pointFound = new Point((int)vectorFound.X, (int)vectorFound.Y);
 
             WorldUtils.Gen(pointFound, new Shapes.Circle(5), Actions.Chain(new GenAction[]
             {
                 new Modifiers.IsEmpty(),
-                new Actions.SetLiquid(LiquidID.Shimmer),
+                new Actions.SetTile(TileID.ShimmerBlock),
+                //new Actions.SetLiquid(LiquidID.Shimmer),
+                new Actions.SetFrames()
+            }));
+
+            WorldUtils.Gen(tunnelPoint, new Shapes.Circle(5), Actions.Chain(new GenAction[]
+            {
+                new Modifiers.IsEmpty(),
+                new Actions.SetTile(TileID.ShimmerBlock),
+                //new Actions.SetLiquid(LiquidID.Shimmer),
                 new Actions.SetFrames()
             }));
 
