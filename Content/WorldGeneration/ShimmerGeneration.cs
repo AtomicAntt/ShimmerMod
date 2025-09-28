@@ -74,6 +74,8 @@ namespace ShimmerMod.Content.WorldGeneration
             int biomeSizeY = 100;
             int biomeSizeY2 = 200;
 
+            double biomeSizeMultiplier = 2.5;
+
             // best practice is to check if any locations exist, but lets just skip that lol
             mostLeftShimmer = (int)shimmerLocations[0].X;
             mostRightShimmer = (int)shimmerLocations[0].X;
@@ -117,25 +119,34 @@ namespace ShimmerMod.Content.WorldGeneration
 
             // Step 2: Generate a mound shape for the inside of the first layer of the biome
             Point point2 = new Point(middleXShimmer, mostLowShimmer + biomeSizeY + 10); // Location of mound 10 spaces right under the shimmer
-            WorldUtils.Gen(point2, new Shapes.Mound((int)(lengthXShimmer * (1.5)), biomeSizeY), Actions.Chain(new GenAction[]
+            WorldUtils.Gen(point2, new Shapes.Mound((int)(lengthXShimmer * (biomeSizeMultiplier)), biomeSizeY), Actions.Chain(new GenAction[]
             {
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
                 new Actions.SetFrames()
             }));
 
             // Step 3: Generate a rectangular shape for the inner layer of the biome
-            Point point3 = new Point(middleXShimmer - (int)(lengthXShimmer * (1.5)), mostLowShimmer + biomeSizeY + 11); // middle of shimmer and to the left, the half width of mound // also same y position as mound but it gotta be 1 under
-            WorldUtils.Gen(point3, new Shapes.Rectangle(lengthXShimmer * 3, biomeSizeY2), Actions.Chain(new GenAction[]
+            Point point3 = new Point(middleXShimmer - (int)(lengthXShimmer * (biomeSizeMultiplier)), mostLowShimmer + biomeSizeY + 11); // middle of shimmer and to the left, the half width of mound // also same y position as mound but it gotta be 1 under
+            WorldUtils.Gen(point3, new Shapes.Rectangle((int)(lengthXShimmer * 2 * biomeSizeMultiplier), biomeSizeY2), Actions.Chain(new GenAction[]
             {
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
                 new Actions.SetFrames()
             }));
 
             // Step 4: Generate a tunnel in that first layer
-            Point randomPoint = new Point(WorldGen.genRand.Next(mostLeftShimmer, mostRightShimmer), WorldGen.genRand.Next((mostLowShimmer + (biomeSizeY/2) + 10), (mostLowShimmer + biomeSizeY + 10)));
-            WorldGen.digTunnel(randomPoint.X, randomPoint.Y, 1, 0, ((int)(lengthXShimmer * (1.4))), 6);
+            //Point randomPoint = new Point(WorldGen.genRand.Next(mostLeftShimmer, mostRightShimmer), WorldGen.genRand.Next((mostLowShimmer + (biomeSizeY/2) + 10), (mostLowShimmer + biomeSizeY + 10)));
 
-            Main.NewText(randomPoint + " is where the tunnel is and " + point + " is the top left of the shimmer");
+            Point tunnelPoint = new Point(mostLeftShimmer + WorldGen.genRand.Next(-10, -5), (mostLowShimmer + biomeSizeY + 10) + WorldGen.genRand.Next(-10, 10));
+            ReLogic.Utilities.Vector2D vectorFound = WorldGen.digTunnel(tunnelPoint.X, tunnelPoint.Y, 1, 0, ((int)(lengthXShimmer * (1.4))), 6);
+
+            Main.NewText(tunnelPoint + " is where the tunnel is and " + point + " is the top left of the shimmer");
+
+            //WorldGen.PlaceTile((int)vectorFound.X, (int)vectorFound.Y, TileID.Adamantite, true, true);
+
+            //Point tunnelPoint2 = new Point(mostRightShimmer + WorldGen.genRand.Next(5, 10), (mostLowShimmer + biomeSizeY + 10) + WorldGen.genRand.Next(-10, 10));
+            //WorldGen.digTunnel(tunnelPoint.X, tunnelPoint.Y, -1, 0, ((int)(lengthXShimmer * (1.4))), 6);
+
+            //Main.NewText(tunnelPoint2 + " is where the 2nd tunnel is");
 
             Main.NewText("Shimmer Generated!!");
 
