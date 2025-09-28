@@ -38,7 +38,7 @@ namespace ShimmerMod.Content.WorldGeneration
             //WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), ModContent.TileType<VoidBlock>());
             Point point = new Point(x, y);
 
-            WorldUtils.Gen(point, new Shapes.Rectangle(5, 5), Actions.Chain(new GenAction[]
+            WorldUtils.Gen(point, new Shapes.Mound(5, 5), Actions.Chain(new GenAction[]
             {
                 //new Modifiers.IsSolid(),
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
@@ -70,8 +70,9 @@ namespace ShimmerMod.Content.WorldGeneration
             int mostHighShimmer = 0;
             int mostLowShimmer = 0;
 
-            int surfaceBiomeSizeY = 75;
+            //int surfaceBiomeSizeY = 75;
             int biomeSizeY = 100;
+            int biomeSizeY2 = 200;
 
             // best practice is to check if any locations exist, but lets just skip that lol
             mostLeftShimmer = (int)shimmerLocations[0].X;
@@ -101,25 +102,35 @@ namespace ShimmerMod.Content.WorldGeneration
 
             int middleXShimmer = (mostLeftShimmer + mostRightShimmer) / 2;
             int lengthXShimmer = mostRightShimmer - mostLeftShimmer;
+            int heightYShimmer = mostLowShimmer - mostHighShimmer;
 
             //Main.NewText(lengthXShimmer);
 
-            // Step 1: Generate the surface shimmer shape
-            Point point = new Point(middleXShimmer, mostHighShimmer);
-            WorldUtils.Gen(point, new Shapes.Circle((int)(lengthXShimmer * (1.2)), surfaceBiomeSizeY), Actions.Chain(new GenAction[]
+            //Step 1: Generate the surface shimmer shape
+            Point point = new Point(mostLeftShimmer - 3, mostHighShimmer - 3); // Top left of rectangle basically, with an additional up 3 and left 3
+            WorldUtils.Gen(point, new Shapes.Rectangle(lengthXShimmer + 6, heightYShimmer + 45), Actions.Chain(new GenAction[]
             {
                 new Modifiers.IsSolid(),
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
                 new Actions.SetFrames()
             }));
 
-            // Step 2: Generate a shape for the inside of the biome
-            Point point2 = new Point(middleXShimmer, mostLowShimmer + biomeSizeY + 10);
-            WorldUtils.Gen(point2, new Shapes.Circle((int)(lengthXShimmer * (1.5)), biomeSizeY), Actions.Chain(new GenAction[]
+            // Step 2: Generate a mound shape for the inside of the first layer of the biome
+            Point point2 = new Point(middleXShimmer, mostLowShimmer + biomeSizeY + 10); // Location of mound 10 spaces right under the shimmer
+            WorldUtils.Gen(point2, new Shapes.Mound((int)(lengthXShimmer * (1.5)), biomeSizeY), Actions.Chain(new GenAction[]
             {
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
                 new Actions.SetFrames()
             }));
+
+            // Step 3: Generate a rectangular shape for the inner layer of the biome
+            Point point3 = new Point(middleXShimmer - (int)(lengthXShimmer * (1.5)), mostLowShimmer + biomeSizeY + 11); // middle of shimmer and to the left, the half width of mound // also same y position as mound but it gotta be 1 under
+            WorldUtils.Gen(point3, new Shapes.Rectangle(lengthXShimmer * 3, heightYShimmer), Actions.Chain(new GenAction[]
+            {
+                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetFrames()
+            }));
+
             Main.NewText("Shimmer Generated!!");
 
         }
