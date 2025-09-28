@@ -125,11 +125,17 @@ namespace ShimmerMod.Content.WorldGeneration
 
             // Step 3: Generate a rectangular shape for the inner layer of the biome
             Point point3 = new Point(middleXShimmer - (int)(lengthXShimmer * (1.5)), mostLowShimmer + biomeSizeY + 11); // middle of shimmer and to the left, the half width of mound // also same y position as mound but it gotta be 1 under
-            WorldUtils.Gen(point3, new Shapes.Rectangle(lengthXShimmer * 3, heightYShimmer), Actions.Chain(new GenAction[]
+            WorldUtils.Gen(point3, new Shapes.Rectangle(lengthXShimmer * 3, biomeSizeY2), Actions.Chain(new GenAction[]
             {
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
                 new Actions.SetFrames()
             }));
+
+            // Step 4: Generate a tunnel in that first layer
+            Point randomPoint = new Point(WorldGen.genRand.Next(mostLeftShimmer, mostRightShimmer), WorldGen.genRand.Next((mostLowShimmer + (biomeSizeY/2) + 10), (mostLowShimmer + biomeSizeY + 10)));
+            WorldGen.digTunnel(randomPoint.X, randomPoint.Y, 1, 0, ((int)(lengthXShimmer * (1.4))), 6);
+
+            Main.NewText(randomPoint + " is where the tunnel is and " + point + " is the top left of the shimmer");
 
             Main.NewText("Shimmer Generated!!");
 
