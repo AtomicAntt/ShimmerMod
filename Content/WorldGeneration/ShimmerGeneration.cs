@@ -38,7 +38,7 @@ namespace ShimmerMod.Content.WorldGeneration
             //WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), ModContent.TileType<VoidBlock>());
             Point point = new Point(x, y);
 
-            WorldUtils.Gen(point, new Shapes.Mound(5, 5), Actions.Chain(new GenAction[]
+            WorldUtils.Gen(point, new Shapes.Rectangle(5, 5), Actions.Chain(new GenAction[]
             {
                 //new Modifiers.IsSolid(),
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
@@ -70,7 +70,7 @@ namespace ShimmerMod.Content.WorldGeneration
             int mostHighShimmer = 0;
             int mostLowShimmer = 0;
 
-            int surfaceBiomeSizeY = 50;
+            int surfaceBiomeSizeY = 75;
             int biomeSizeY = 100;
 
             // best practice is to check if any locations exist, but lets just skip that lol
@@ -104,6 +104,7 @@ namespace ShimmerMod.Content.WorldGeneration
 
             //Main.NewText(lengthXShimmer);
 
+            // Step 1: Generate the surface shimmer shape
             Point point = new Point(middleXShimmer, mostHighShimmer);
             WorldUtils.Gen(point, new Shapes.Circle((int)(lengthXShimmer * (1.2)), surfaceBiomeSizeY), Actions.Chain(new GenAction[]
             {
@@ -111,7 +112,15 @@ namespace ShimmerMod.Content.WorldGeneration
                 new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
                 new Actions.SetFrames()
             }));
-            Main.NewText("Shimmer Generated!");
+
+            // Step 2: Generate a shape for the inside of the biome
+            Point point2 = new Point(middleXShimmer, mostLowShimmer + biomeSizeY + 10);
+            WorldUtils.Gen(point2, new Shapes.Circle((int)(lengthXShimmer * (1.5)), biomeSizeY), Actions.Chain(new GenAction[]
+            {
+                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetFrames()
+            }));
+            Main.NewText("Shimmer Generated!!");
 
         }
     }
