@@ -138,8 +138,20 @@ namespace ShimmerMod.Content.WorldGeneration
 
             Point tunnelPoint = new Point(mostLeftShimmer + WorldGen.genRand.Next(-10, -5), (mostLowShimmer + biomeSizeY + 10) + WorldGen.genRand.Next(-10, 10));
             ReLogic.Utilities.Vector2D vectorFound = WorldGen.digTunnel(tunnelPoint.X, tunnelPoint.Y, 1, 0, ((int)(lengthXShimmer * (1.4))), 6);
+            Point pointFound = new Point((int)vectorFound.X, (int)vectorFound.Y);
+
+            WorldUtils.Gen(pointFound, new Shapes.Circle(5), Actions.Chain(new GenAction[]
+            {
+                new Modifiers.IsEmpty(),
+                new Actions.SetLiquid(LiquidID.Shimmer),
+                new Actions.SetFrames()
+            }));
 
             Main.NewText(tunnelPoint + " is where the tunnel is and " + point + " is the top left of the shimmer");
+            //Tile shimmerTile = Main.tile[(int)vectorFound.X, (int)vectorFound.Y];
+            //shimmerTile.LiquidAmount = 255;
+            //shimmerTile.LiquidType = LiquidID.Shimmer;
+
 
             //WorldGen.PlaceTile((int)vectorFound.X, (int)vectorFound.Y, TileID.Adamantite, true, true);
 
