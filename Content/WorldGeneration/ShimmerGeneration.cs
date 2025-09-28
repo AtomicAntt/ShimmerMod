@@ -8,6 +8,7 @@ using ShimmerMod.Content.Tiles;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Terraria.WorldBuilding;
+using Terraria.ModLoader.IO;
 
 namespace ShimmerMod.Content.WorldGeneration
 {
@@ -34,7 +35,15 @@ namespace ShimmerMod.Content.WorldGeneration
         {
             Dust.QuickBox(new Vector2(x, y) * 16, new Vector2(x + 1, y + 1) * 16, 2, Color.YellowGreen, null);
 
-            WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), ModContent.TileType<VoidBlock>());
+            //WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), ModContent.TileType<VoidBlock>());
+            Point point = new Point(x, y);
+
+            WorldUtils.Gen(point, new Shapes.Mound(5, 5), Actions.Chain(new GenAction[]
+            {
+                //new Modifiers.IsSolid(),
+                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetFrames()
+            }));
 
             Main.NewText("Generated Blocks!");
         }
@@ -61,6 +70,7 @@ namespace ShimmerMod.Content.WorldGeneration
             int mostHighShimmer = 0;
             int mostLowShimmer = 0;
 
+            int surfaceBiomeSizeY = 50;
             int biomeSizeY = 100;
 
             // best practice is to check if any locations exist, but lets just skip that lol
@@ -94,11 +104,12 @@ namespace ShimmerMod.Content.WorldGeneration
 
             //Main.NewText(lengthXShimmer);
 
-            Point point = new Point(middleXShimmer, mostLowShimmer + (biomeSizeY / 2));
-            WorldUtils.Gen(point, new Shapes.Circle(lengthXShimmer, biomeSizeY), Actions.Chain(new GenAction[]
+            Point point = new Point(middleXShimmer, mostHighShimmer);
+            WorldUtils.Gen(point, new Shapes.Circle((int)(lengthXShimmer * (1.2)), surfaceBiomeSizeY), Actions.Chain(new GenAction[]
             {
                 new Modifiers.IsSolid(),
-                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>())
+                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetFrames()
             }));
             Main.NewText("Shimmer Generated!");
 
