@@ -17,7 +17,7 @@ namespace ShimmerMod.Content.Tiles
             DustType = DustID.ShimmerSpark;
             VanillaFallbackOnModDeletion = TileID.DiamondGemspark;
 
-            AddMapEntry(new Color(8, 11, 15));
+            AddMapEntry(new Color(224, 212, 177));
         }
     }
 }

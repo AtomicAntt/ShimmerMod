@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Terraria.WorldBuilding;
 using Terraria.ModLoader.IO;
 using ReLogic.Utilities;
+using Microsoft.Build.FileSystem;
 
 namespace ShimmerMod.Content.WorldGeneration
 {
@@ -89,6 +90,42 @@ namespace ShimmerMod.Content.WorldGeneration
                         }
                     }
                 }
+            }
+        }
+
+        private void GenerateShimmerBlocks(Rectangle biomeBounds)
+        {
+            int clusterCount = 100;
+            for (int i = 0; i < clusterCount; i++)
+            {
+                int x = WorldGen.genRand.Next(biomeBounds.Left + 20, biomeBounds.Right - 20);
+                int y = WorldGen.genRand.Next(biomeBounds.Top + 20, biomeBounds.Bottom - 20);
+                WorldGen.TileRunner(x, y, WorldGen.genRand.Next(5, 10), WorldGen.genRand.Next(20, 40), TileID.ShimmerBlock);
+            }
+        }
+
+        private void GenerateShimmerChests(Rectangle biomeBounds)
+        {
+            int chestCount = 10;
+            for (int i = 0; i < chestCount; i++)
+            {
+                bool success = false;
+                int attempts = 0;
+                int x = 0;
+                int y = 0;
+                while (!success)
+                {
+                    attempts++;
+                    x = WorldGen.genRand.Next(biomeBounds.Left + 20, biomeBounds.Right - 20);
+                    y = WorldGen.genRand.Next(biomeBounds.Top + 20, biomeBounds.Bottom - 20);
+                    int chest = WorldGen.PlaceChest(x, y, (ushort)ModContent.TileType<ShimmerChest>());
+                    success = chest != -1;
+                }
+
+                if (success)
+                    Main.NewText($"Placed chest at {x}, {y} after {attempts} attempts.");
+                else
+                    Main.NewText($"Failed to place chest after {attempts} attempts.");
             }
         }
 
@@ -181,10 +218,23 @@ namespace ShimmerMod.Content.WorldGeneration
                 new Actions.SetFrames()
             }));
 
+            // Step 3.5: Generate an inner rectangular shape inside to make breakable aether blocks
+            int offset = 5;
+            Point point3B = new Point(middleXShimmer - (int)(lengthXShimmer * (biomeSizeMultiplier)) + offset, mostLowShimmer + biomeSizeY + 11 + offset); // middle of shimmer and to the left, the half width of mound // also same y position as mound but it gotta be 1 under
+            WorldUtils.Gen(point3B, new Shapes.Rectangle((int)(lengthXShimmer * 2 * biomeSizeMultiplier) - (2*offset), biomeSizeY2 - (2*offset)), Actions.Chain(new GenAction[]
+            {
+                new Modifiers.IsSolid(),
+                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetFrames()
+            }));
+
             // Step 4: Seal the inner layer
 
             Rectangle biomeBounds = new Rectangle(point3.X, point3.Y, (int)(lengthXShimmer * 2 * biomeSizeMultiplier), biomeSizeY2);
             SealBiomeBorder(biomeBounds);
+
+            //Step 4.5: Put some chests now
+            GenerateShimmerChests(biomeBounds);
 
             //Step 5: Put a little shimmer in every non solid tile and rid of walls
             Point point4 = new Point(middleXShimmer - (int)(lengthXShimmer * (biomeSizeMultiplier)), mostLowShimmer + biomeSizeY + 11); // middle of shimmer and to the left, the half width of mound // also same y position as mound but it gotta be 1 under
@@ -192,9 +242,13 @@ namespace ShimmerMod.Content.WorldGeneration
             {
                 new Modifiers.IsEmpty(),
                 new Actions.RemoveWall(),
-                new Actions.SetLiquid(LiquidID.Shimmer, 100),
+                new Actions.SetLiquid(LiquidID.Shimmer, 75),
                 new Actions.SetFrames()
             }));
+
+            //Step 6: Replace some inner blocks with shimmer blocks
+            GenerateShimmerBlocks(biomeBounds);
+
 
             /*
             // Step 4: Generate a tunnel in that first layer

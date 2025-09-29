@@ -1,0 +1,169 @@
+﻿using Microsoft.Xna.Framework;
+using System;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.Enums;
+using Terraria.GameContent;
+using Terraria.GameContent.ObjectInteractions;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using Terraria.ObjectData;
+
+namespace ShimmerMod.Content.Tiles
+{
+    public class ShimmerChest : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            SetUpChest(this, ModContent.ItemType<Content.Furniture.ShimmerChest>(), true);
+        }
+        void SetUpChest(ModTile mt, int itemDropID, bool offset = false, int offsetAmt = 4)
+        {
+            mt.RegisterItemDrop(itemDropID);
+
+            Main.tileSpelunker[mt.Type] = true;
+            Main.tileContainer[mt.Type] = true;
+            Main.tileShine2[mt.Type] = true;
+            Main.tileShine[mt.Type] = 1200;
+            Main.tileFrameImportant[mt.Type] = true;
+            Main.tileNoAttach[mt.Type] = true;
+            Main.tileOreFinderPriority[mt.Type] = 500;
+            TileID.Sets.BasicChest[mt.Type] = true;
+            TileID.Sets.HasOutlines[mt.Type] = true;
+            TileID.Sets.DisableSmartCursor[mt.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            if (offset)
+                TileObjectData.newTile.DrawYOffset = offsetAmt;
+            TileObjectData.newTile.Origin = new Point16(0, 1);
+            TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
+            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(new Func<int, int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
+            TileObjectData.newTile.AnchorInvalidTiles = new int[] { TileID.MagicalIceBlock };
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.LavaDeath = false;
+            TileObjectData.newTile.LavaPlacement = LiquidPlacement.Allowed;
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            TileObjectData.addTile(mt.Type);
+
+            mt.AdjTiles = new int[] { TileID.Containers };
+        }
+
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+        {
+            return true;
+        }
+
+        public override void NumDust(int i, int j, bool fail, ref int num)
+        {
+            num = 1;
+        }
+
+        public static void MouseOver(int i, int j, int itemID)
+        {
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = itemID;
+        }
+
+        public override void MouseOverFar(int i, int j)
+        {
+            MouseOver(i, j);
+            Player player = Main.LocalPlayer;
+            if (player.cursorItemIconText == "")
+            {
+                player.cursorItemIconEnabled = false;
+                player.cursorItemIconID = ItemID.None;
+            }
+        }
+
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        {
+            // We override KillMultiTile to handle additional logic other than the item drop. In this case, unregistering the Chest from the world
+            Chest.DestroyChest(i, j);
+        }
+
+
+        public override bool RightClick(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            Tile tile = Main.tile[i, j];
+            Main.mouseRightRelease = false;
+            int left = i;
+            int top = j;
+            if (tile.TileFrameX % 36 != 0)
+            {
+                left--;
+            }
+
+            if (tile.TileFrameY != 0)
+            {
+                top--;
+            }
+
+            player.CloseSign();
+            player.SetTalkNPC(-1);
+            Main.npcChatCornerItem = 0;
+            Main.npcChatText = "";
+            if (Main.editChest)
+            {
+                SoundEngine.PlaySound(SoundID.MenuTick);
+                Main.editChest = false;
+                Main.npcChatText = string.Empty;
+            }
+
+            if (player.editedChestName)
+            {
+                NetMessage.SendData(MessageID.SyncPlayerChest, text: NetworkText.FromLiteral(Main.chest[player.chest].name), number: player.chest, number2: 1f);
+                player.editedChestName = false;
+            }
+
+            bool isLocked = Chest.IsLocked(left, top);
+            if (Main.netMode == NetmodeID.MultiplayerClient && !isLocked)
+            {
+                if (left == player.chestX && top == player.chestY && player.chest != -1)
+                {
+                    player.chest = -1;
+                    Recipe.FindRecipes();
+                    SoundEngine.PlaySound(SoundID.MenuClose);
+                }
+                else
+                {
+                    NetMessage.SendData(MessageID.RequestChestOpen, number: left, number2: top);
+                    Main.stackSplit = 600;
+                }
+            }
+            else
+            {
+                if (isLocked)
+                {
+                    // bruh
+                }
+                else
+                {
+                    int chest = Chest.FindChest(left, top);
+                    if (chest != -1)
+                    {
+                        Main.stackSplit = 600;
+                        if (chest == player.chest)
+                        {
+                            player.chest = -1;
+                            SoundEngine.PlaySound(SoundID.MenuClose);
+                        }
+                        else
+                        {
+                            SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
+                            player.OpenChest(left, top, chest);
+                        }
+
+                        Recipe.FindRecipes();
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
+}
