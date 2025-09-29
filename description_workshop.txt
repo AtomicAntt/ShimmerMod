@@ -6,7 +6,7 @@ Inside this new environment, you will find yourself at a new biome containing mo
 
 Taking advantage of the properties of Shimmer, players may traverse by simply submerging themselves into the Shimmer to go through solid tiles.
 
-However, the effects of Shimmering may make it too difficult to traverse, which gives the Chromatic Cloak, obtainable by submerging a Star Cloak in the Shimmer, a great purpose!
+However, the effects of Shimmering may make it too difficult to traverse, which gives the Chromatic Cloak, obtainable by submerging a Star Cloak in the Shimmer, a great purpose! This is the cloak that allows players to be immune from Shimmer Phasing, and only allow phasing through the Shimmer when they hold down.
 
 ===========================================
 More Shimmer! Details

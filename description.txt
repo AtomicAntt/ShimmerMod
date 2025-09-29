@@ -1,1 +1,11 @@
-Modify this file with a description of your mod.
+The More Shimmer Mod! is a mod that creates an expansion of Shimmer/Aether biome under the vanilla generated Shimmer pool in the Aether!
+
+To enter the biome, submerge yourself into the Shimmer and you will phase through solid blocks until you reach the expanded modded Shimmer biome!
+
+Traverse through the biome by entering shimmer and find chests containing loot.
+
+You may find that the Chromatic Cloak is useful, as you can become immune to the effects of Shimmer and choose to submerge and phase by holding down.
+
+To create the Chromatic Cloak, submerge a Star Cloak in the Shimmer or find it in the expanded Shimmer Biome!
+
+Open source found here: https://github.com/AtomicAntt/ShimmerMod
