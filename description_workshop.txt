@@ -1,1 +1,24 @@
-This description will show up on the steam page, check out https://steamcommunity.com/comment/Guide/formattinghelp.
+Introducing a mod that expands the Shimmer/Aether mini-biome!
+
+The Shimmer expansion generates directly under the Shimmer, allowing entry only to players that dive into it!
+
+Inside this new environment, you will find yourself at a new biome containing more Shimmer, 2 additional block types, and chests containing useful loot.
+
+Taking advantage of the properties of Shimmer, players may traverse by simply submerging themselves into the Shimmer to go through solid tiles.
+
+However, the effects of Shimmering may make it too difficult to traverse, which gives the Chromatic Cloak, obtainable by submerging a Star Cloak in the Shimmer, a great purpose!
+
+===========================================
+More Shimmer! Details
+===========================================
+
+During world generation with this mod enabled, "Expanding the shimmer" will create an additional shimmer biome underneath the biome, which will stay ~200 tiles above the underworld.
+
+There will be two types of blocks generated. The first is an unbreakable void block which prevents players from entering the expanded Shimmer/Aether biome. To enter this expanded biome, you must submerge yourself into the vanilla-generated large pool of Shimmer.
+
+Additionally, there will be breakable void blocks within the expanded biome, which will be somewhat tough to break, to encourage traversal through the Shimmer as players can phase through solid blocks.
+
+Aetherium Blocks will also spawn around the biome, giving players a bigger supply if they wish to build with Aetherium Bricks/Walls/Blocks.
+
+Warning: World generation may be buggy/disappointing in small worlds, so I recommend using this mod with medium/large worlds!
+

@@ -1,3 +1,4 @@
-displayName = Shimmer Mod
+displayName = More Shimmer!
 author = Atomic Ant
 version = 0.1
+includeSource = true
