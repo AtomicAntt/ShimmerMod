@@ -1,21 +1,40 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Input;
-using Terraria.ID;
+﻿using Microsoft.Build.FileSystem;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
-using Terraria.GameContent.Generation;
+using Microsoft.Xna.Framework.Input;
+using ReLogic.Utilities;
 using ShimmerMod.Content.Tiles;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
-using Terraria.WorldBuilding;
+using Terraria;
+using Terraria.GameContent.Generation;
+using Terraria.ID;
+using Terraria.IO;
+using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using ReLogic.Utilities;
-using Microsoft.Build.FileSystem;
+using Terraria.WorldBuilding;
 
 namespace ShimmerMod.Content.WorldGeneration
 {
     public class ShimmerGeneration : ModSystem
     {
+
+        public static LocalizedText WorldGenShimmerPassMessage { get; private set; }
+
+        public override void SetStaticDefaults()
+        {
+            WorldGenShimmerPassMessage = Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(WorldGenShimmerPassMessage)}"));
+        }
+
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+        {
+            int ShimmerIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Shimmer"));
+            if (ShimmerIndex != -1)
+            {
+                tasks.Insert(ShimmerIndex + 1, new WorldGenShimmerPass("Shimmer Expansion", 100f));
+            }
+        }
+
         public static bool JustPressed(Keys key)
         {
             return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
@@ -113,23 +132,35 @@ namespace ShimmerMod.Content.WorldGeneration
                 int attempts = 0;
                 int x = 0;
                 int y = 0;
+                int chestIndex = -2;
                 while (!success)
                 {
                     attempts++;
                     x = WorldGen.genRand.Next(biomeBounds.Left + 20, biomeBounds.Right - 20);
                     y = WorldGen.genRand.Next(biomeBounds.Top + 20, biomeBounds.Bottom - 20);
-                    int chest = WorldGen.PlaceChest(x, y, (ushort)ModContent.TileType<ShimmerChest>());
-                    success = chest != -1;
+                    //chestIndex = WorldGen.PlaceChest(x, y, (ushort)ModContent.TileType<ShimmerChest>());
+                    chestIndex = WorldGen.PlaceChest(x, y, 21);
+
+                    success = chestIndex != -1;
                 }
 
                 if (success)
-                    Main.NewText($"Placed chest at {x}, {y} after {attempts} attempts.");
-                else
-                    Main.NewText($"Failed to place chest after {attempts} attempts.");
+                {
+                    //Main.NewText($"Placed chest at {x}, {y} after {attempts} attempts.");
+                    Chest shimmerChest = Main.chest[chestIndex];
+
+                    Item item = new Item();
+                    item.SetDefaults((int)ItemID.ShimmerBlock);
+                    shimmerChest.item[0] = item;
+                    //shimmerChest.item[0] = new Item();
+                    //shimmerChest.item[0].SetDefaults(ItemID.ShimmerBlock);
+                }
+                //else
+                //    Main.NewText($"Failed to place chest after {attempts} attempts.");
             }
         }
 
-        private void CreateShimmerBiome()
+        public void CreateShimmerBiome()
         {
             List<Vector2> shimmerLocations = new List<Vector2>();
 
@@ -291,6 +322,20 @@ namespace ShimmerMod.Content.WorldGeneration
             */
             Main.NewText("Shimmer Generated!!");
 
+        }
+    }
+
+    public class WorldGenShimmerPass : GenPass
+    {
+        public WorldGenShimmerPass(string name, float loadWeight) : base(name, loadWeight)
+        {
+        }
+
+        protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
+        {
+            progress.Message = ShimmerGeneration.WorldGenShimmerPassMessage.Value;
+            ShimmerGeneration shimmerGenerator = new ShimmerGeneration();
+            shimmerGenerator.CreateShimmerBiome();
         }
     }
 }

@@ -4,3 +4,5 @@ Items: {
 		Tooltip: ""
 	}
 }
+
+WorldGen.WorldGenShimmerPassMessage: Mods.ShimmerMod.WorldGen.WorldGenShimmerPassMessage
