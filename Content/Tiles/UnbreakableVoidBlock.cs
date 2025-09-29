@@ -5,15 +5,14 @@ using Terraria.ModLoader;
 
 namespace ShimmerMod.Content.Tiles
 {
-    public class VoidBlock : ModTile
+    public class UnbreakableVoidBlock : ModTile
     {
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
-            MinPick = 30;
-            MineResist = 2f;
+            MinPick = 300;
 
             DustType = DustID.ShimmerSpark;
             VanillaFallbackOnModDeletion = TileID.DiamondGemspark;

@@ -35,56 +35,56 @@ namespace ShimmerMod.Content.WorldGeneration
             }
         }
 
-        public static bool JustPressed(Keys key)
-        {
-            return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
-        }
+        //public static bool JustPressed(Keys key)
+        //{
+        //    return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
+        //}
 
-        public override void PostUpdateWorld()
-        {
-            if (JustPressed(Keys.D1))
-            {
-                TestMethod((int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16);
-            }
-            if (JustPressed(Keys.D2))
-            {
-                CreateShimmerBiome();
-            }
-        }
+        //public override void PostUpdateWorld()
+        //{
+        //    if (JustPressed(Keys.D1))
+        //    {
+        //        TestMethod((int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16);
+        //    }
+        //    if (JustPressed(Keys.D2))
+        //    {
+        //        CreateShimmerBiome();
+        //    }
+        //}
 
-        private void TestMethod(int x, int y)
-        {
-            Dust.QuickBox(new Vector2(x, y) * 16, new Vector2(x + 1, y + 1) * 16, 2, Color.YellowGreen, null);
+        //private void TestMethod(int x, int y)
+        //{
+        //    Dust.QuickBox(new Vector2(x, y) * 16, new Vector2(x + 1, y + 1) * 16, 2, Color.YellowGreen, null);
 
-            //WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), ModContent.TileType<VoidBlock>());
-            Point point = new Point(x, y);
+        //    //WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), ModContent.TileType<VoidBlock>());
+        //    Point point = new Point(x, y);
 
-            WorldUtils.Gen(point, new ShapeBranch(90, 10), Actions.Chain(new GenAction[]
-            {
-                //new Modifiers.IsSolid(),
-                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
-                new Actions.SetFrames()
-            }));
-            //WorldUtils.Gen(point,
-            //    new ShapeRunner(
-            //        strength: 10,  // radius of carve
-            //        steps: 100,    // length of tunnel
-            //        velocity: new Vector2D(1f, 0f)
-            //    ),
-            //    Actions.Chain(new GenAction[]
-            //    {
-            //        new Actions.ClearTile(),  // removes tiles
-            //        new Actions.SetFrames()   // updates framing
-            //    }));
+        //    WorldUtils.Gen(point, new ShapeBranch(90, 10), Actions.Chain(new GenAction[]
+        //    {
+        //        //new Modifiers.IsSolid(),
+        //        new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+        //        new Actions.SetFrames()
+        //    }));
+        //    //WorldUtils.Gen(point,
+        //    //    new ShapeRunner(
+        //    //        strength: 10,  // radius of carve
+        //    //        steps: 100,    // length of tunnel
+        //    //        velocity: new Vector2D(1f, 0f)
+        //    //    ),
+        //    //    Actions.Chain(new GenAction[]
+        //    //    {
+        //    //        new Actions.ClearTile(),  // removes tiles
+        //    //        new Actions.SetFrames()   // updates framing
+        //    //    }));
 
-            //WorldUtils.Gen(point, new ShapeRunner(), Actions.Chain(new GenAction[]
-            //{
-            //    //new Modifiers.IsSolid(),
-            //    new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
-            //    new Actions.SetFrames()
-            //}));
-            Main.NewText("Generated Blocks!");
-        }
+        //    //WorldUtils.Gen(point, new ShapeRunner(), Actions.Chain(new GenAction[]
+        //    //{
+        //    //    //new Modifiers.IsSolid(),
+        //    //    new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+        //    //    new Actions.SetFrames()
+        //    //}));
+        //    Main.NewText("Generated Blocks!");
+        //}
 
         private void SealBiomeBorder(Rectangle biomeBounds)
         {
@@ -103,7 +103,7 @@ namespace ShimmerMod.Content.WorldGeneration
                             WorldUtils.Gen(point, new Shapes.Circle(4), Actions.Chain(new GenAction[]
                             {
                                 //new Modifiers.IsSolid(),
-                                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                                new Actions.SetTile((ushort)ModContent.TileType<UnbreakableVoidBlock>()),
                                 new Actions.SetFrames()
                             }));
                         }
@@ -228,7 +228,7 @@ namespace ShimmerMod.Content.WorldGeneration
             WorldUtils.Gen(point, new Shapes.Rectangle(lengthXShimmer + 6, heightYShimmer + 45), Actions.Chain(new GenAction[]
             {
                 new Modifiers.IsSolid(),
-                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetTile((ushort)ModContent.TileType<UnbreakableVoidBlock>()),
                 new Actions.SetFrames()
             }));
 
@@ -236,7 +236,7 @@ namespace ShimmerMod.Content.WorldGeneration
             Point point2 = new Point(middleXShimmer, mostLowShimmer + biomeSizeY + 10); // Location of mound 10 spaces right under the shimmer
             WorldUtils.Gen(point2, new Shapes.Mound((int)(lengthXShimmer * (biomeSizeMultiplier)), biomeSizeY), Actions.Chain(new GenAction[]
             {
-                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetTile((ushort)ModContent.TileType<UnbreakableVoidBlock>()),
                 new Actions.SetFrames()
             }));
 
@@ -245,7 +245,7 @@ namespace ShimmerMod.Content.WorldGeneration
             WorldUtils.Gen(point3, new Shapes.Rectangle((int)(lengthXShimmer * 2 * biomeSizeMultiplier), biomeSizeY2), Actions.Chain(new GenAction[]
             {
                 new Modifiers.IsSolid(),
-                new Actions.SetTile((ushort)ModContent.TileType<VoidBlock>()),
+                new Actions.SetTile((ushort)ModContent.TileType<UnbreakableVoidBlock>()),
                 new Actions.SetFrames()
             }));
 
