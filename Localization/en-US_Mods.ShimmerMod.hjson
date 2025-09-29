@@ -3,6 +3,26 @@ Items: {
 		DisplayName: Shimmer Chest
 		Tooltip: ""
 	}
+
+	Bread: {
+		DisplayName: Bread
+		Tooltip: ""
+	}
+
+	Pancakes: {
+		DisplayName: Pancakes
+		Tooltip: ""
+	}
+
+	Toast: {
+		DisplayName: Toast
+		Tooltip: ""
+	}
+
+	Waffle: {
+		DisplayName: Waffle
+		Tooltip: ""
+	}
 }
 
 WorldGen.WorldGenShimmerPassMessage: Expanding the shimmer

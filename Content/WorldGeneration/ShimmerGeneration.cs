@@ -3,7 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Utilities;
+using ShimmerMod.Content.Food;
 using ShimmerMod.Content.Tiles;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Generation;
@@ -12,6 +14,7 @@ using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI;
 using Terraria.WorldBuilding;
 
 namespace ShimmerMod.Content.WorldGeneration
@@ -125,7 +128,7 @@ namespace ShimmerMod.Content.WorldGeneration
 
         private void GenerateShimmerChests(Rectangle biomeBounds)
         {
-            int chestCount = 10;
+            int chestCount = 15;
             for (int i = 0; i < chestCount; i++)
             {
                 bool success = false;
@@ -136,10 +139,14 @@ namespace ShimmerMod.Content.WorldGeneration
                 while (!success)
                 {
                     attempts++;
+                    if (attempts > 1000)
+                    {
+                        break;
+                    }
                     x = WorldGen.genRand.Next(biomeBounds.Left + 20, biomeBounds.Right - 20);
                     y = WorldGen.genRand.Next(biomeBounds.Top + 20, biomeBounds.Bottom - 20);
                     //chestIndex = WorldGen.PlaceChest(x, y, (ushort)ModContent.TileType<ShimmerChest>());
-                    chestIndex = WorldGen.PlaceChest(x, y, 21);
+                    chestIndex = WorldGen.PlaceChest(x, y, style: 37);
 
                     success = chestIndex != -1;
                 }
@@ -149,14 +156,83 @@ namespace ShimmerMod.Content.WorldGeneration
                     //Main.NewText($"Placed chest at {x}, {y} after {attempts} attempts.");
                     Chest shimmerChest = Main.chest[chestIndex];
 
-                    Item item = new Item();
-                    item.SetDefaults((int)ItemID.ShimmerBlock);
-                    shimmerChest.item[0] = item;
-                    //shimmerChest.item[0] = new Item();
-                    //shimmerChest.item[0].SetDefaults(ItemID.ShimmerBlock);
+                    var itemsToAdd = new List<(int type, int stack)>();
+                    int specialItem = new Terraria.Utilities.WeightedRandom<int>(
+                        Tuple.Create((int)ItemID.ShimmerCloak, 1.5),
+                        Tuple.Create((int)ItemID.BandofStarpower, 2.0),
+                        Tuple.Create((int)ItemID.None, 5.0),
+                        Tuple.Create(ModContent.ItemType<Bread>(), 3.0),
+                        Tuple.Create(ModContent.ItemType<Pancakes>(), 3.0),
+                        Tuple.Create(ModContent.ItemType<Toast>(), 3.0),
+                        Tuple.Create(ModContent.ItemType<Waffle>(), 3.0)
+                    );
+                    if (specialItem != ItemID.None)
+                    {
+                        itemsToAdd.Add((specialItem, 1));
+                    }
+
+                    switch (Main.rand.Next(4))
+                    {
+                        case 0:
+                            itemsToAdd.Add((ItemID.FallenStar, Main.rand.Next(9, 15)));
+                            itemsToAdd.Add((ItemID.ManaCrystal, Main.rand.Next(1, 2)));
+                            itemsToAdd.Add((ItemID.ShimmerTorch, Main.rand.Next(5, 15)));
+                            break;
+                        case 1:
+                            itemsToAdd.Add((ItemID.Amethyst, Main.rand.Next(2, 5)));
+                            itemsToAdd.Add((ItemID.Emerald, Main.rand.Next(2, 5)));
+                            itemsToAdd.Add((ItemID.GemTreeAmethystSeed, Main.rand.Next(4, 8)));
+                            itemsToAdd.Add((ItemID.GemTreeEmeraldSeed, Main.rand.Next(4, 8)));
+                            break;
+                        case 2:
+                            itemsToAdd.Add((ItemID.Diamond, Main.rand.Next(2, 5)));
+                            itemsToAdd.Add((ItemID.Ruby, Main.rand.Next(2, 5)));
+                            itemsToAdd.Add((ItemID.GemTreeRubySeed, Main.rand.Next(4, 8)));
+                            itemsToAdd.Add((ItemID.GemTreeDiamondSeed, Main.rand.Next(4, 8)));
+                            break;
+                        case 3:
+                            itemsToAdd.Add((ItemID.Sapphire, Main.rand.Next(2, 5)));
+                            itemsToAdd.Add((ItemID.Topaz, Main.rand.Next(2, 5)));
+                            itemsToAdd.Add((ItemID.GemTreeSapphireSeed, Main.rand.Next(4, 8)));
+                            itemsToAdd.Add((ItemID.GemTreeTopazSeed, Main.rand.Next(4, 8)));
+                            break;
+                    }
+
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            itemsToAdd.Add((ItemID.TeleportationPotion, Main.rand.Next(1, 8)));
+                            break;
+                        case 1:
+                            itemsToAdd.Add((ItemID.GravitationPotion, Main.rand.Next(1, 8)));
+                            break;
+                        case 2:
+                            itemsToAdd.Add((ItemID.GoldCoin, Main.rand.Next(5, 18)));
+                            break;
+                    }
+
+
+                    //Item item = new Item();
+                    //item.SetDefaults((int)ItemID.ShimmerBlock);
+                    //shimmerChest.item[0] = item;
+
+                    int chestItemIndex = 0;
+                    foreach (var itemToAdd in itemsToAdd)
+                    {
+                        Item item = new Item();
+                        item.SetDefaults(itemToAdd.type);
+                        item.stack = itemToAdd.stack;
+                        shimmerChest.item[chestItemIndex] = item;
+                        chestItemIndex++;
+                        if (chestItemIndex >= 40)
+                            break;
+
+                        //shimmerChest.item[0] = new Item();
+                        //shimmerChest.item[0].SetDefaults(ItemID.ShimmerBlock);
+                    }
+                    //else
+                    //    Main.NewText($"Failed to place chest after {attempts} attempts.");
                 }
-                //else
-                //    Main.NewText($"Failed to place chest after {attempts} attempts.");
             }
         }
 
@@ -320,7 +396,7 @@ namespace ShimmerMod.Content.WorldGeneration
                 
             }
             */
-            Main.NewText("Shimmer Generated!!");
+            //Main.NewText("Shimmer Generated!!");
 
         }
     }
