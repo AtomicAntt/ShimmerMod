@@ -5,4 +5,4 @@ Items: {
 	}
 }
 
-WorldGen.WorldGenShimmerPassMessage: Mods.ShimmerMod.WorldGen.WorldGenShimmerPassMessage
+WorldGen.WorldGenShimmerPassMessage: "Expanding the shimmer"
