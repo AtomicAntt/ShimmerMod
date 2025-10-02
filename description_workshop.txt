@@ -22,3 +22,5 @@ Aetherium Blocks will also spawn around the biome, giving players a bigger suppl
 
 Warning: World generation may be buggy/disappointing in small worlds, so I recommend using this mod with medium/large worlds!
 
+Open source can be found here: https://github.com/AtomicAntt/ShimmerMod
+

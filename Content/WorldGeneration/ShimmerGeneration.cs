@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Utilities;
+using ShimmerMod.Content.Drink;
 using ShimmerMod.Content.Food;
 using ShimmerMod.Content.Tiles;
 using System;
@@ -174,42 +175,43 @@ namespace ShimmerMod.Content.WorldGeneration
                     switch (Main.rand.Next(4))
                     {
                         case 0:
-                            itemsToAdd.Add((ItemID.FallenStar, Main.rand.Next(9, 15)));
-                            itemsToAdd.Add((ItemID.ManaCrystal, Main.rand.Next(1, 2)));
-                            itemsToAdd.Add((ItemID.ShimmerTorch, Main.rand.Next(5, 15)));
+                            itemsToAdd.Add((ItemID.FallenStar, Main.rand.Next(15, 45)));
+                            itemsToAdd.Add((ItemID.ShimmerTorch, Main.rand.Next(13, 28)));
                             break;
                         case 1:
-                            itemsToAdd.Add((ItemID.Amethyst, Main.rand.Next(2, 5)));
-                            itemsToAdd.Add((ItemID.Emerald, Main.rand.Next(2, 5)));
-                            itemsToAdd.Add((ItemID.GemTreeAmethystSeed, Main.rand.Next(4, 8)));
-                            itemsToAdd.Add((ItemID.GemTreeEmeraldSeed, Main.rand.Next(4, 8)));
+                            itemsToAdd.Add((ItemID.Amethyst, Main.rand.Next(5, 12)));
+                            itemsToAdd.Add((ItemID.Emerald, Main.rand.Next(5, 12)));
+                            itemsToAdd.Add((ItemID.GemTreeAmethystSeed, Main.rand.Next(12, 18)));
+                            itemsToAdd.Add((ItemID.GemTreeEmeraldSeed, Main.rand.Next(12, 18)));
                             break;
                         case 2:
-                            itemsToAdd.Add((ItemID.Diamond, Main.rand.Next(2, 5)));
-                            itemsToAdd.Add((ItemID.Ruby, Main.rand.Next(2, 5)));
-                            itemsToAdd.Add((ItemID.GemTreeRubySeed, Main.rand.Next(4, 8)));
-                            itemsToAdd.Add((ItemID.GemTreeDiamondSeed, Main.rand.Next(4, 8)));
+                            itemsToAdd.Add((ItemID.Diamond, Main.rand.Next(5, 12)));
+                            itemsToAdd.Add((ItemID.Ruby, Main.rand.Next(5, 12)));
+                            itemsToAdd.Add((ItemID.GemTreeRubySeed, Main.rand.Next(12, 18)));
+                            itemsToAdd.Add((ItemID.GemTreeDiamondSeed, Main.rand.Next(12, 18)));
                             break;
                         case 3:
-                            itemsToAdd.Add((ItemID.Sapphire, Main.rand.Next(2, 5)));
-                            itemsToAdd.Add((ItemID.Topaz, Main.rand.Next(2, 5)));
-                            itemsToAdd.Add((ItemID.GemTreeSapphireSeed, Main.rand.Next(4, 8)));
-                            itemsToAdd.Add((ItemID.GemTreeTopazSeed, Main.rand.Next(4, 8)));
+                            itemsToAdd.Add((ItemID.Sapphire, Main.rand.Next(5, 12)));
+                            itemsToAdd.Add((ItemID.Topaz, Main.rand.Next(5, 12)));
+                            itemsToAdd.Add((ItemID.GemTreeSapphireSeed, Main.rand.Next(12, 18)));
+                            itemsToAdd.Add((ItemID.GemTreeTopazSeed, Main.rand.Next(12, 18)));
                             break;
                     }
 
                     switch (Main.rand.Next(3))
                     {
                         case 0:
-                            itemsToAdd.Add((ItemID.TeleportationPotion, Main.rand.Next(1, 8)));
+                            itemsToAdd.Add((ItemID.TeleportationPotion, Main.rand.Next(3, 8)));
                             break;
                         case 1:
-                            itemsToAdd.Add((ItemID.GravitationPotion, Main.rand.Next(1, 8)));
+                            itemsToAdd.Add((ItemID.GravitationPotion, Main.rand.Next(3, 8)));
                             break;
                         case 2:
-                            itemsToAdd.Add((ItemID.GoldCoin, Main.rand.Next(5, 18)));
+                            itemsToAdd.Add((ModContent.ItemType<ShimmerBottle>(), Main.rand.Next(10, 28)));
                             break;
                     }
+
+                    itemsToAdd.Add((ItemID.GoldCoin, Main.rand.Next(3, 18)));
 
 
                     //Item item = new Item();

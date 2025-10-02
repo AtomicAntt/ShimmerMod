@@ -15,9 +15,14 @@ namespace ShimmerMod.Content.Tiles
 {
     public class ShimmerChest : ModTile
     {
+
+        //public static LocalizedText mapEntryName;
+
         public override void SetStaticDefaults()
         {
-            SetUpChest(this, ModContent.ItemType<Content.Furniture.ShimmerChest>(), true);
+            SetUpChest(this, ModContent.ItemType<Content.Furniture.ShimmerChest>(), false);
+            AddMapEntry(new Color(115, 3, 252), this.GetLocalization("MapEntry0"), MapChestName);
+            //CreateMapEntryName();
         }
         void SetUpChest(ModTile mt, int itemDropID, bool offset = false, int offsetAmt = 4)
         {
@@ -38,8 +43,8 @@ namespace ShimmerMod.Content.Tiles
                 TileObjectData.newTile.DrawYOffset = offsetAmt;
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
-            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(new Func<int, int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
+            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
             TileObjectData.newTile.AnchorInvalidTiles = new int[] { TileID.MagicalIceBlock };
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.LavaDeath = false;
@@ -126,6 +131,34 @@ namespace ShimmerMod.Content.Tiles
             Chest.DestroyChest(i, j);
         }
 
+        public static string MapChestName(string name, int i, int j)
+        {
+            int left = i;
+            int top = j;
+            Tile tile = Main.tile[i, j];
+            if (tile.TileFrameX % 36 != 0)
+            {
+                left--;
+            }
+
+            if (tile.TileFrameY != 0)
+            {
+                top--;
+            }
+
+            int chest = Chest.FindChest(left, top);
+            if (chest < 0)
+            {
+                return Language.GetTextValue("LegacyChestType.0");
+            }
+
+            if (Main.chest[chest].name == "")
+            {
+                return name;
+            }
+
+            return name + ": " + Main.chest[chest].name;
+        }
 
         public override bool RightClick(int i, int j)
         {

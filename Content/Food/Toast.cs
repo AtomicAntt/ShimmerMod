@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace ShimmerMod.Content.Food
 {
-    public class Bread : ModItem
+    public class Toast : ModItem
     {
         public override void SetStaticDefaults()
         {

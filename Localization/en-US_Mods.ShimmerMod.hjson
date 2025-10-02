@@ -23,6 +23,18 @@ Items: {
 		DisplayName: Waffle
 		Tooltip: ""
 	}
+
+	ShimmerBottle: {
+		DisplayName: Shimmer Bottle
+		Tooltip: Inflicts shimmering.
+	}
 }
 
 WorldGen.WorldGenShimmerPassMessage: Expanding the shimmer
+
+Tiles: {
+	ShimmerChest: {
+		MapEntry: Shimmer Chest
+		MapEntry0: Shimmer Chest
+	}
+}
