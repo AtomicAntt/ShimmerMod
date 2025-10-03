@@ -28,6 +28,16 @@ Items: {
 		DisplayName: Shimmer Bottle
 		Tooltip: Inflicts shimmering.
 	}
+
+	VoidBlockItem: {
+		DisplayName: Void Block Item
+		Tooltip: ""
+	}
+
+	VoidBlock: {
+		DisplayName: Void Block
+		Tooltip: ""
+	}
 }
 
 WorldGen.WorldGenShimmerPassMessage: Expanding the shimmer
