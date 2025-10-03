@@ -12,7 +12,7 @@ namespace ShimmerMod.Content.Tiles
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
-            MinPick = 300;
+            MinPick = 210;
 
             DustType = DustID.ShimmerSpark;
             VanillaFallbackOnModDeletion = TileID.DiamondGemspark;
